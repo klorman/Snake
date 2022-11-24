@@ -37,7 +37,7 @@ class GameManager:
 
 		if self.field.snake.head in self.field.snake.tails or self.is_snake_out_of_field():
 			self.is_game_over = True
-			self.field.snake.head.symbol = '██'
+			self.field.snake.head.symbol = '█'
 			self.field.redraw()
 			time.sleep(3)
 

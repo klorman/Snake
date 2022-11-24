@@ -8,6 +8,7 @@ class Menu(object):
         self.options = options
         self.title = title
         self.selected_line = 0
+        self.updated = False
 
     def show(self) -> None:
         self.screen.clear()
@@ -46,7 +47,9 @@ class Menu(object):
 
     def select(self) -> int:
         while True:
-            self.show()
+            if not self.updated:
+                self.show()
+                self.updated = True
 
             key = self.screen.getch()
 
@@ -55,14 +58,17 @@ class Menu(object):
                     self.selected_line -= 1
                 else:
                     self.selected_line = len(self.options) - 1
+                self.updated = False
 
             elif key in Input.down or key in Input.right:
                 if self.selected_line < len(self.options) - 1:
                     self.selected_line += 1
                 else:
                     self.selected_line = 0
+                self.updated = False
 
             elif key in [ord('\n'), ord('\r'), curses.KEY_ENTER]:
+                self.updated = False
                 return self.selected_line
             else:
                 pass
