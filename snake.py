@@ -1,4 +1,5 @@
 from field_object import FieldObject
+from input import Input
 
 
 class SnakeHead(FieldObject):
@@ -32,13 +33,19 @@ class Snake:
 		self.head.position = (self.head.position[0] + self.direction[0], self.head.position[1] + self.direction[1])
 
 	def change_direction(self, input):
-		inputs = {ord('a'): (0, -1), ord('d'): (0, 1), ord('w'): (-1, 0), ord('s'): (1, 0)}
-		
-		if input not in inputs:
+		new_direction = None
+
+		if input in Input.left:
+			new_direction = (0, -1)
+		elif input in Input.right:
+			new_direction = (0, 1)
+		elif input in Input.up:
+			new_direction = (-1, 0)
+		elif input in Input.down:
+			new_direction = (1, 0)
+		else:
 			return
-			
-		new_direction = inputs[input]
-		
+
 		if self.direction[0] != -new_direction[0] and self.direction[1] != -new_direction[1]:
 			self.direction = new_direction
 		

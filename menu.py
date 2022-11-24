@@ -1,4 +1,5 @@
 import curses
+from input import Input
 
 
 class Menu(object):
@@ -49,14 +50,18 @@ class Menu(object):
 
             key = self.screen.getch()
 
-            if (key == curses.KEY_UP or key == curses.KEY_LEFT) and self.selected_line > 0:
-                self.selected_line -= 1
-            elif (key == curses.KEY_UP or key == curses.KEY_LEFT) and self.selected_line <= 0:
-                self.selected_line = len(self.options) - 1
-            elif (key == curses.KEY_DOWN or key == curses.KEY_RIGHT) and self.selected_line < len(self.options) - 1:
-                self.selected_line += 1
-            elif (key == curses.KEY_DOWN or key == curses.KEY_RIGHT) and self.selected_line >= len(self.options) - 1:
-                self.selected_line = 0
+            if key in Input.up or key in Input.left:
+                if self.selected_line > 0:
+                    self.selected_line -= 1
+                else:
+                    self.selected_line = len(self.options) - 1
+
+            elif key in Input.down or key in Input.right:
+                if self.selected_line < len(self.options) - 1:
+                    self.selected_line += 1
+                else:
+                    self.selected_line = 0
+
             elif key in [ord('\n'), ord('\r'), curses.KEY_ENTER]:
                 return self.selected_line
             else:
