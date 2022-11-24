@@ -18,10 +18,7 @@ class Menu(object):
             y = 5
             x = x_size // 2 - len(title_lines[0]) // 2
 
-            if x < 0 or x > x_size:
-                raise Exception('Increase terminal size')
-
-            if y >= 0:
+            if y >= 0 and not (x < 0 or x > x_size):
                 for line in title_lines:
                     self.screen.addstr(y, x, line)
                     y += 1

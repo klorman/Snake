@@ -1,6 +1,6 @@
 import time
+import curses
 from field import Field
-from main_menu import MainMenu
 
 
 class GameManager:
@@ -9,6 +9,7 @@ class GameManager:
 		self.is_game_over = False
 
 	def start_new_game(self):
+		curses.update_lines_cols()
 		self.is_game_over = False
 		self.field = Field(self.field.screen)
 
