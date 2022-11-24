@@ -1,15 +1,15 @@
 import curses
 from game_manager import GameManager
+from main_menu import MainMenu
 
 
 def main(screen):
-    screen.border()
-    screen.refresh()
     curses.curs_set(False)
     screen.nodelay(True)
     
     gm = GameManager(screen)
-    gm.start_new_game()
+    menu = MainMenu(screen, gm)
+    menu.start_routine()
 
 
 if __name__ == "__main__":
