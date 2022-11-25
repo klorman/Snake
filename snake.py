@@ -49,4 +49,5 @@ class Snake:
 		if self.direction[0] != -new_direction[0] and self.direction[1] != -new_direction[1]:
 			self.direction = new_direction
 		
-		
+	def is_ate_fruit(self) -> bool:
+		return self.tail_end != self.tails[-1]

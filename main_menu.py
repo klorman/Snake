@@ -4,6 +4,7 @@ from command_menu import CommandMenu
 class MainMenu(CommandMenu):
     def __init__(self, screen, gm):
         options = [CommandMenu.MenuOption('New game', gm.start_new_game),
+                   CommandMenu.MenuOption('Options', None),
                    CommandMenu.MenuOption('Exit', None)]
 
         title = "░██████╗███╗░░██╗░█████╗░██╗░░██╗███████╗  ░██████╗░░█████╗░███╗░░░███╗███████╗\n" \
@@ -45,3 +46,6 @@ class MainMenu(CommandMenu):
                      "░╚████╔╝░██║██║░░██╗░░░██║░░░██║░░██║██╔══██╗░░╚██╔╝░░╚═╝╚═╝╚═╝\n" \
                      "░░╚██╔╝░░██║╚█████╔╝░░░██║░░░╚█████╔╝██║░░██║░░░██║░░░██╗██╗██╗\n" \
                      "░░╚═╝░░░╚═╝░╚════╝░░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░╚═╝╚═╝╚═╝"
+
+    def set_options_title(self):
+        self.title = ""

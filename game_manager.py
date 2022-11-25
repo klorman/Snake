@@ -5,12 +5,14 @@ from field import Field
 
 class GameManager:
 	def __init__(self, screen):
+		self.screen = screen
 		self.field = Field(screen)
 		self.is_game_over = False
 
 	def start_new_game(self):
 		curses.update_lines_cols()
 		self.is_game_over = False
+
 		self.field = Field(self.field.screen)
 
 		self.field.screen.clear()
@@ -31,6 +33,11 @@ class GameManager:
 
 	def update(self):
 		key = self.field.screen.getch()
+		curses.flushinp()
+		if key == ord(' '):
+			self.field.snake.speed = 500
+		else:
+			self.field.snake.speed = 5
 		self.field.snake.change_direction(key)
 
 		self.field.snake.move()
