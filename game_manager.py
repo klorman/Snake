@@ -1,56 +1,75 @@
-import time
 import curses
-from field import Field
+from ui import UI
+from snake import Snake
+from fruit import Fruit
+from settings import Settings
 
 
 class GameManager:
 	def __init__(self, screen):
-		self.screen = screen
-		self.field = Field(screen)
+		self.ui = UI(screen)
+		self.snake = None
+		self.fruit = None
 		self.is_game_over = False
 
-	def start_new_game(self):
-		curses.update_lines_cols()
+	def start_new_game(self) -> bool:
+		self.ui.screen.clear()
+		self.ui.screen.refresh()
 		self.is_game_over = False
 
-		self.field = Field(self.field.screen)
+		self.snake = Snake()
+		self.fruit = Fruit()
+		self.ui.create_field()
 
-		self.field.screen.clear()
-		self.field.screen.border()
+		self.snake.spawn(self.ui.field.size)
+		self.fruit.spawn(self.ui.field.size)
 
-		self.field.snake.spawn(self.field.size)
-		self.field.fruit.spawn(self.field.size)
-		
 		while not self.is_game_over:
-			time.sleep(1 / self.field.snake.speed)
 			self.update()
+			curses.napms(1000 // self.snake.speed)
+
+			if len(self.snake.tails) + 2 >= Settings.field_size[0] * Settings.field_size[1]:
+				return True
 
 		return False
 
 	def is_snake_out_of_field(self):
-		return (self.field.snake.head.position[0] < 1 or self.field.snake.head.position[0] > self.field.size[0] - 2) or \
-				(self.field.snake.head.position[1] < 1 or self.field.snake.head.position[1] > self.field.size[1] - 2)
+		return self.snake.head.position[0] < 1 or \
+				self.snake.head.position[0] > Settings.field_size[0] or \
+				self.snake.head.position[1] < 1 or \
+				self.snake.head.position[1] > Settings.field_size[1]
+
+	def process_input(self):
+		acceleration_key = ord(' ')
+
+		key = self.ui.screen.getch()
+		curses.flushinp()
+
+		if key == acceleration_key:
+			self.snake.speed = Settings.snake_speed * 100
+		else:
+			self.snake.speed = Settings.snake_speed
+
+		self.snake.change_direction(key)
+
+	def update_field(self):
+		self.ui.field.redraw(self.snake, self.fruit)
 
 	def update(self):
-		key = self.field.screen.getch()
-		curses.flushinp()
-		if key == ord(' '):
-			self.field.snake.speed = 500
-		else:
-			self.field.snake.speed = 5
-		self.field.snake.change_direction(key)
+		self.process_input()
 
-		self.field.snake.move()
+		self.snake.move()
 
-		if self.field.snake.head in self.field.snake.tails or self.is_snake_out_of_field():
+		if self.snake.head in self.snake.tails or self.is_snake_out_of_field():
 			self.is_game_over = True
-			self.field.snake.head.symbol = '█'
-			self.field.redraw()
-			time.sleep(3)
+			self.snake.head.symbol = '█'
+			self.update_field()
+			curses.napms(2000)
+			return
 
-		elif self.field.snake.head == self.field.fruit:
-			self.field.snake.add_tail()
-			while self.field.fruit == self.field.snake.head or self.field.fruit in self.field.snake.tails: #TODO: переделать
-				self.field.fruit.spawn(self.field.size)
+		elif self.snake.head == self.fruit:
+			self.snake.add_tail()
+			while self.fruit == self.snake.head or self.fruit in self.snake.tails: #TODO: переделать
+				self.fruit.spawn(self.ui.field.size)
 
-		self.field.redraw()
+		self.update_field()

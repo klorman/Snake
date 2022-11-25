@@ -12,23 +12,29 @@ class SnakeTail(FieldObject):
 		super().__init__('#', position)
 
 
+class ErasingTail(FieldObject):
+	def __init__(self, position):
+		super().__init__(' ', position)
+
+
 class Snake:
 	def __init__(self):
-		self.speed = 5
-		self.direction = (0, 1)
-		self.head = SnakeHead((None, None))
+		self.speed = None
+		self.direction = None
+		self.head = None
 		self.tails = []
-		self.tail_end = SnakeTail((None, None))
+		self.erasing_tail = ErasingTail(None)
 
 	def spawn(self, size):
-		self.head.position = (size[0] // 2, 2)
+		self.direction = (0, 1)
+		self.head = SnakeHead((size[0] // 2 - 1, 2))
 		self.tails.append(SnakeTail((self.head.position[0], self.head.position[1] - 1)))
 		
 	def add_tail(self):
-		self.tails.append(self.tail_end)
+		self.tails.append(self.erasing_tail)
 
 	def move(self):
-		self.tail_end.position = self.tails[-1].position
+		self.erasing_tail.position = self.tails[-1].position
 		self.tails = [SnakeTail(self.head.position)] + self.tails[:-1]
 		self.head.position = (self.head.position[0] + self.direction[0], self.head.position[1] + self.direction[1])
 
@@ -50,4 +56,4 @@ class Snake:
 			self.direction = new_direction
 		
 	def is_ate_fruit(self) -> bool:
-		return self.tail_end != self.tails[-1]
+		return self.erasing_tail != self.tails[-1]

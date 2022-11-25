@@ -9,4 +9,4 @@ class Fruit(FieldObject):
 
 	def spawn(self, size):
 		self.need_to_redraw = True
-		self.position = (randrange(1, size[0] - 2), randrange(1, size[1] - 2))
+		self.position = (randrange(1, size[0] - 1), randrange(1, size[1] - 1))
